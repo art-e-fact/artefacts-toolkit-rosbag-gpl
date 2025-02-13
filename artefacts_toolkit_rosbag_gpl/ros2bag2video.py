@@ -137,7 +137,7 @@ class RosVideoWriter(Node):
             self.listener_callback,
             10)
 
-        p1 = subprocess.Popen(['ros2',
+        self.rosbag_proc = subprocess.Popen(['ros2',
                                'bag',
                                'play',
                                self.bag_file,
@@ -365,6 +365,8 @@ def extract_video(rosbag_filepath, topic_name, output_filepath, fps=20):
     except SystemExit:
         print("Video creation complete. Shutting down...")
     finally:
+        if videowriter.rosbag_proc and videowriter.rosbag_proc.poll() is None:
+            videowriter.rosbag_proc.terminate()
         videowriter.destroy_node()
         rclpy.shutdown()
         print("Video writer node destroyed and shutdown complete")
