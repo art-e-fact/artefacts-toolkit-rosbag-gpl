@@ -367,6 +367,7 @@ def extract_video(rosbag_filepath, topic_name, output_filepath, fps=20):
     finally:
         if videowriter.rosbag_proc and videowriter.rosbag_proc.poll() is None:
             videowriter.rosbag_proc.terminate()
+            videowriter.rosbag_proc.wait()
         videowriter.destroy_node()
         rclpy.shutdown()
         print("Video writer node destroyed and shutdown complete")
